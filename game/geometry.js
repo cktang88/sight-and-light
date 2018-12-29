@@ -46,39 +46,26 @@ function getIntersection(ray,segment){
 function getSightPolygon(sightX,sightY){
 
 	// Get all unique points
-	let points = (function(segments){
+	const points = (segments => {
 		let a = [];
 		segments.forEach(function(seg){
 			a.push(seg.a,seg.b);
 		});
 		return a;
 	})(segments);
-	let uniquePoints = (function(points){
-		let set = {};
-		return points.filter(function(p){
-			let key = p.x+","+p.y;
-			if(key in set){
-				return false;
-			}else{
-				set[key]=true;
-				return true;
-			}
-		});
-	})(points);
+	const uniquePoints = [...new Set(points)]; 
 
 	// Get all angles
-	let uniqueAngles = [];
-	for(let j=0;j<uniquePoints.length;j++){
-		let uniquePoint = uniquePoints[j];
+	const uniqueAngles = [];
+	uniquePoints.forEach(uniquePoint => {
 		let angle = Math.atan2(uniquePoint.y-sightY,uniquePoint.x-sightX);
 		uniquePoint.angle = angle;
 		uniqueAngles.push(angle-0.00001,angle,angle+0.00001);
-	}
+	});
 
 	// RAYS IN ALL DIRECTIONS
 	let intersects = [];
-	for(let j=0;j<uniqueAngles.length;j++){
-		let angle = uniqueAngles[j];
+	uniqueAngles.forEach(angle => {
 
 		// Calculate dx & dy from angle
 		let dx = Math.cos(angle);
@@ -92,29 +79,28 @@ function getSightPolygon(sightX,sightY){
 
 		// Find CLOSEST intersection
 		let closestIntersect = null;
-		for(let i=0;i<segments.length;i++){
-			let intersect = getIntersection(ray,segments[i]);
-			if(!intersect) continue;
+		segments.forEach(segment => {
+			let intersect = getIntersection(ray,segment);
+			if(!intersect) return;
 			if(!closestIntersect || intersect.param<closestIntersect.param){
 				closestIntersect=intersect;
 			}
-		}
+		});
 
 		// Intersect angle
-		if(!closestIntersect) continue;
+		if(!closestIntersect) return;
 		closestIntersect.angle = angle;
 
 		// Add to list of intersects
 		intersects.push(closestIntersect);
 
-	}
+	});
 
 	// Sort intersects by angle
-	intersects = intersects.sort(function(a,b){
+	intersects = intersects.sort((a,b) => {
 		return a.angle-b.angle;
 	});
 
 	// Polygon is intersects, in order of angle
 	return intersects;
-
 }
