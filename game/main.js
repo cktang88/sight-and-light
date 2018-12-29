@@ -1,17 +1,3 @@
-window.onload = function(){
-	drawLoop();
-};
-
-// MOUSE	
-let Mouse = {
-	x: canvas.width/2,
-	y: canvas.height/2
-};
-canvas.onmousemove = function(event){	
-	Mouse.x = event.clientX;
-	Mouse.y = event.clientY;
-	updateCanvas = true;
-};
 
 // LINE SEGMENTS
 const segments = [
@@ -56,3 +42,26 @@ const segments = [
 	{a:{x:480,y:150}, b:{x:400,y:95}}
 
 ];
+
+// preprocess segments
+const POINTS = segments.reduce((r,seg) => r.concat(seg.a, seg.b), []);
+const UNIQUE_POINTS = [...new Set(POINTS)];
+
+/////////////////////////////////////////////////////////////////////////
+
+// MOUSE	
+let Mouse = {
+	x: canvas.width/2,
+	y: canvas.height/2
+};
+canvas.onmousemove = function(event){	
+	Mouse.x = event.clientX;
+	Mouse.y = event.clientY;
+	updateCanvas = true;
+};
+
+// main game loop
+
+window.onload = function(){
+	drawLoop();
+};

@@ -45,19 +45,9 @@ function getIntersection(ray,segment){
 
 function getSightPolygon(sightX,sightY){
 
-	// Get all unique points
-	const points = (segments => {
-		let a = [];
-		segments.forEach(function(seg){
-			a.push(seg.a,seg.b);
-		});
-		return a;
-	})(segments);
-	const uniquePoints = [...new Set(points)]; 
-
 	// Get all angles
 	const uniqueAngles = [];
-	uniquePoints.forEach(uniquePoint => {
+	UNIQUE_POINTS.forEach(uniquePoint => {
 		let angle = Math.atan2(uniquePoint.y-sightY,uniquePoint.x-sightX);
 		uniquePoint.angle = angle;
 		uniqueAngles.push(angle-0.00001,angle,angle+0.00001);

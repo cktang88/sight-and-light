@@ -10,13 +10,12 @@ function draw(){
 
 	// Draw segments
 	ctx.strokeStyle = "#999";
-	for(let i=0;i<segments.length;i++){
-		let seg = segments[i];
+	segments.forEach(seg => {
 		ctx.beginPath();
 		ctx.moveTo(seg.a.x,seg.a.y);
 		ctx.lineTo(seg.b.x,seg.b.y);
 		ctx.stroke();
-	}
+	});
 
 	// Sight Polygons
 	let fuzzyRadius = 10;
