@@ -5,6 +5,10 @@ class PhysicsComponent {
         // recycle to avoid wasting memory
         this.result = Collisions.createResult();
         this.body = body;
+        
+        this.FRICTION = 0.05;
+        this.MAX_VEL_FORWARD = 3;
+        this.MAX_VEL_BACK = 2;
     }
     update(collisions) {
         this.updateMovement(this.body);
@@ -14,19 +18,20 @@ class PhysicsComponent {
     // updates movement
     updateMovement() {
         if (this.body.velocity > 0) {
-            this.body.velocity -= 0.05;
+            this.body.velocity -= this.FRICTION;
 
-            if (this.body.velocity > 3) {
+            if (this.body.velocity > this.MAX_VEL_FORWARD) {
                 this.body.velocity = 3;
             }
         } else if (this.body.velocity < 0) {
-            this.body.velocity += 0.05;
+            this.body.velocity += this.FRICTION;
 
-            if (this.body.velocity < -2) {
-                this.body.velocity = -2;
+            if (this.body.velocity < -1 * this.MAX_VEL_BACK) {
+                this.body.velocity = -1 * this.MAX_VEL_BACK;
             }
         }
 
+        // snap vel to 0 when low enough
         if (!Math.round(this.body.velocity * 100)) {
             this.body.velocity = 0;
         }

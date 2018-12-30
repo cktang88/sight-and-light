@@ -19,12 +19,16 @@ class InputComponent {
             key === 'a' && (this.left = keydown);
             key === 'd' && (this.right = keydown);
         };
+
+        // TODO: make time-dependent
+        this.ACCELERATION = 0.1;
+        this.TURN_SPEED = 0.04;
     }
     update() {
-        this.up && (this.body.velocity += 0.1);
-        this.down && (this.body.velocity -= 0.1);
-        this.left && (this.body.angle -= 0.04);
-        this.right && (this.body.angle += 0.04);
+        this.up && (this.body.velocity += this.ACCELERATION);
+        this.down && (this.body.velocity -= this.ACCELERATION);
+        this.left && (this.body.angle -= this.TURN_SPEED);
+        this.right && (this.body.angle += this.TURN_SPEED);
     }
 }
 
