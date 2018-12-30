@@ -18,3 +18,9 @@ Collisions
 Dev
 ---
 * Built using [parcel](https://parceljs.org/)
+
+```bash
+
+npm start # start dev server with hot reload
+
+```

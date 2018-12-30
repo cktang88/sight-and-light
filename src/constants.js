@@ -74,6 +74,8 @@ const POINTS = SEGMENTS.reduce((r,seg) => r.concat(seg.a, seg.b), []);
 const UNIQUE_POINTS = [...new Set(POINTS)];
 
 export {
+    WIDTH,
+    HEIGHT,
     canvas,
     ctx,
     Mouse,

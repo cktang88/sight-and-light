@@ -1,11 +1,15 @@
 import canvasDraw from "./render";
 
-/////////////////////////////////////////////////////////////////////////
+import Tanks from './tanks'
 
-// DRAW LOOP
-window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
 
-function drawLoop(){
+
+window.requestAnimationFrame = window.requestAnimationFrame ||
+	window.webkitRequestAnimationFrame ||
+	window.mozRequestAnimationFrame ||
+	window.msRequestAnimationFrame;
+
+function drawLoop() {
 	requestAnimationFrame(drawLoop);
 	/*
     if(updateCanvas){
@@ -14,10 +18,10 @@ function drawLoop(){
 	}*/
 	canvasDraw();
 }
-
-
 // main game loop
-
-window.onload = function(){
+window.onload = function () {
 	drawLoop();
+	// TODO: game update logic loop
+	const elem = new Tanks();
+	document.getElementById('root').appendChild(elem.element);
 };
