@@ -1,133 +1,16 @@
+
+import InputComponent from './components/Input';
+import PhysicsComponent from './components/Physics';
+import GraphicsComponent from './components/Graphics';
 import Collisions from 'collisions';
 
 import {
     WIDTH,
     HEIGHT,
-    FANCY_GRAPHICS
 } from './constants'
 
 const width = WIDTH;
 const height = HEIGHT;
-const result = Collisions.createResult();
-
-class InputComponent {
-    constructor() {
-        this.up = false;
-        this.down = false;
-        this.left = false;
-        this.right = false;
-
-        this.setKeyEventHandler = (e) => {
-            const keydown = e.type === 'keydown';
-            const key = e.key.toLowerCase();
-
-            key === 'w' && (this.up = keydown);
-            key === 's' && (this.down = keydown);
-            key === 'a' && (this.left = keydown);
-            key === 'd' && (this.right = keydown);
-        };
-    }
-    update(player) {
-        this.up && (player.velocity += 0.1);
-        this.down && (player.velocity -= 0.1);
-        this.left && (player.angle -= 0.04);
-        this.right && (player.angle += 0.04);
-    }
-}
-
-class PhysicsComponent {
-    constructor() {
-
-    }
-    update(player, collisions) {
-        this.updatePlayer(player);
-        this.handleCollisions(player, collisions);
-    }
-    updatePlayer(player) {
-        const x = Math.cos(player.angle);
-        const y = Math.sin(player.angle);
-
-        if (player.velocity > 0) {
-            player.velocity -= 0.05;
-
-            if (player.velocity > 3) {
-                player.velocity = 3;
-            }
-        } else if (player.velocity < 0) {
-            player.velocity += 0.05;
-
-            if (player.velocity < -2) {
-                player.velocity = -2;
-            }
-        }
-
-        if (!Math.round(player.velocity * 100)) {
-            player.velocity = 0;
-        }
-
-        if (player.velocity) {
-            player.x += x * player.velocity;
-            player.y += y * player.velocity;
-        }
-    }
-    handleCollisions(player, collisions) {
-        collisions.update();
-
-        const potentials = player.potentials();
-
-        // Negate any collisions
-        for (const body of potentials) {
-            if (player.collides(body, result)) {
-                player.x -= result.overlap * result.overlap_x;
-                player.y -= result.overlap * result.overlap_y;
-
-                player.velocity *= 0.9
-            }
-        }
-    }
-}
-
-class GraphicsComponent {
-    constructor() {
-        this.element = document.createElement('div');
-        this.canvas = document.createElement('canvas');
-        
-        this.canvas.width = width;
-        this.canvas.height = height;
-        this.context = this.canvas.getContext('2d');
-
-        this.bvh_checkbox = document.getElementById('bvh');
-        this.element.appendChild(this.canvas);
-
-    }
-    update(collisions) {
-        this.context.fillStyle = '#000000';
-        this.context.fillRect(0, 0, WIDTH, HEIGHT);
-
-        if (FANCY_GRAPHICS) {
-            // cyan highlight
-            this.context.strokeStyle = '#00FFFF';
-            this.context.lineWidth = 2;
-            this.context.beginPath();
-            collisions.draw(this.context);
-            this.context.stroke();
-        }
-
-        // white main line color
-        this.context.strokeStyle = '#FFFFFF';
-        this.context.lineWidth = 1;
-        this.context.beginPath();
-        collisions.draw(this.context);
-        this.context.stroke();
-
-        if (this.bvh_checkbox.checked) {
-            this.context.strokeStyle = '#00FF00';
-            this.context.beginPath();
-            collisions.drawBVH(this.context);
-            this.context.stroke();
-        }
-    }
-}
 
 class Game {
     constructor(rootDOMElem) {
