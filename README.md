@@ -41,3 +41,13 @@ Dev
 npm start # start dev server with hot reload
 
 ```
+
+
+Updates
+---
+
+- 12/20 - decided trying to piece together many demos is a bad idea. Better to use game engine. Must be **actively** developed, have collision system, preferably math/vector system, ECS system, visibility/LOS system, sound/sprite support, camera/viewport system, particle system.
+    * Candidates: 
+        1. phaser.js --> not ECS :(
+        2. melon.js
+        3. crafty.js
