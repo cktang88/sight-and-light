@@ -4,36 +4,32 @@ import {
     HEIGHT
 } from '../constants'
 
+import context from '../game'
+
 class GraphicsComponent {
-    constructor(context) {
-        this.context = context;
+    constructor(body) {
+        this.body = body;
     }
-    update(collisions, DRAW_BOUNDING_BOX) {
-        this.context.fillStyle = '#000000';
-        this.context.fillRect(0, 0, WIDTH, HEIGHT);
+    // NOTE: for optimization, passing by value like this may waste lots of memory...
+    update(context) {
 
         if (FANCY_GRAPHICS) {
             // cyan highlight
-            this.context.strokeStyle = '#00FFFF';
-            this.context.lineWidth = 2;
-            this.context.beginPath();
-            collisions.draw(this.context);
-            this.context.stroke();
+            context.strokeStyle = '#00FFFF';
+            context.lineWidth = 2;
+            context.beginPath();
+            // collisions.draw(context);
+            this.body.draw(context);
+            context.stroke();
         }
 
         // white main line color
-        this.context.strokeStyle = '#FFFFFF';
-        this.context.lineWidth = 1;
-        this.context.beginPath();
-        collisions.draw(this.context);
-        this.context.stroke();
-
-        if (DRAW_BOUNDING_BOX) {
-            this.context.strokeStyle = '#00FF00';
-            this.context.beginPath();
-            collisions.drawBVH(this.context);
-            this.context.stroke();
-        }
+        context.strokeStyle = '#FFFFFF';
+        context.lineWidth = 1;
+        context.beginPath();
+        // collisions.draw(context);
+        this.body.draw(context);
+        context.stroke();
     }
 }
 

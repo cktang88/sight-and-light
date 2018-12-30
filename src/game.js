@@ -3,6 +3,8 @@ import PhysicsComponent from './components/Physics';
 import GraphicsComponent from './components/Graphics';
 import Collisions from 'collisions';
 
+import { FANCY_GRAPHICS } from './constants';
+
 import {
     WIDTH,
     HEIGHT,
@@ -23,10 +25,42 @@ class Player {
 
         this.input = new InputComponent(this.poly);
         this.physics = new PhysicsComponent(this.poly);
+        // update graphics in graphics handler in main game class
+        this.graphics = new GraphicsComponent(this.poly);
     }
     update(collisions) {
         this.input.update();
         this.physics.update(collisions);
+    }
+}
+
+class GlobalRenderer extends GraphicsComponent {
+    update(context, collisions, DRAW_BOUNDING_BOX) {
+        if (FANCY_GRAPHICS) {
+            // cyan highlight
+            context.strokeStyle = '#00FFFF';
+            context.lineWidth = 2;
+            context.beginPath();
+            collisions.draw(context);
+            // this.body.draw(context);
+            context.stroke();
+        }
+
+        // white main line color
+        context.strokeStyle = '#FFFFFF';
+        context.lineWidth = 1;
+        context.beginPath();
+        collisions.draw(context);
+        // this.body.draw(context);
+        context.stroke();
+
+        //  general
+        if (DRAW_BOUNDING_BOX) {
+            context.strokeStyle = '#00FF00';
+            context.beginPath();
+            collisions.drawBVH(context);
+            context.stroke();
+        }
     }
 }
 
@@ -48,19 +82,26 @@ class Game {
         this.player = new Player(400, 300, this.collisions);
         this.createMap();
 
-        this.graphics = new GraphicsComponent(this.context);
+        this.graphics = new GlobalRenderer(this.context);
 
         document.addEventListener('keydown', this.player.input.setKeyEventHandler);
         document.addEventListener('keyup', this.player.input.setKeyEventHandler);
 
         const bvhCheckbox = document.getElementById('bvh');
-        const frame = () => {
+        const render = () => {
+            // clear canvas
+            this.context.fillStyle = '#000000';
+            this.context.fillRect(0, 0, WIDTH, HEIGHT);
+
+            this.player.graphics.update(this.context);
+            
             const drawBoundingBox = bvhCheckbox.checked;
-            this.graphics.update(this.collisions, drawBoundingBox);
-            requestAnimationFrame(frame);
+            this.graphics.update(this.context, this.collisions, drawBoundingBox);
+
+            requestAnimationFrame(render);
         };
         // starts drawing as soon as initialized
-        frame();
+        render();
 
         this.TARGET_FPS = 60;
         setInterval(this.update.bind(this), 1000 / this.TARGET_FPS);
