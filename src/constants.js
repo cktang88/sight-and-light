@@ -1,12 +1,38 @@
+const WIDTH = 960;
+const HEIGHT = 540;
+const canvas = document.getElementById("canvas");
+
+const ctx = canvas.getContext("2d");
+
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+
+// MOUSE	
+const Mouse = {
+	x: canvas.width/2,
+	y: canvas.height/2
+};
+
+canvas.onmousemove = function(event){	
+	Mouse.x = event.clientX;
+	Mouse.y = event.clientY;
+};
+
+
+// TODO: need tool to generate polys and import
+
+function convertPolyToSegments () {
+    // convert any import into {a:_, b:_} structure
+}
 
 // LINE SEGMENTS
-const segments = [
+const SEGMENTS = [
 
 	// Border
-	{a:{x:0,y:0}, b:{x:640,y:0}},
-	{a:{x:640,y:0}, b:{x:640,y:360}},
-	{a:{x:640,y:360}, b:{x:0,y:360}},
-	{a:{x:0,y:360}, b:{x:0,y:0}},
+	{a:{x:0,y:0}, b:{x:WIDTH,y:0}},
+	{a:{x:WIDTH,y:0}, b:{x:WIDTH,y:HEIGHT}},
+	{a:{x:WIDTH,y:HEIGHT}, b:{x:0,y:HEIGHT}},
+	{a:{x:0,y:HEIGHT}, b:{x:0,y:0}},
 
 	// Polygon #1
 	{a:{x:100,y:150}, b:{x:120,y:50}},
@@ -26,8 +52,8 @@ const segments = [
 	{a:{x:350,y:320}, b:{x:200,y:260}},
 
 	// Polygon #4
-	{a:{x:340,y:60}, b:{x:360,y:40}},
-	{a:{x:360,y:40}, b:{x:370,y:70}},
+	{a:{x:340,y:60}, b:{x:HEIGHT,y:40}},
+	{a:{x:HEIGHT,y:40}, b:{x:370,y:70}},
 	{a:{x:370,y:70}, b:{x:340,y:60}},
 
 	// Polygon #5
@@ -44,24 +70,14 @@ const segments = [
 ];
 
 // preprocess segments
-const POINTS = segments.reduce((r,seg) => r.concat(seg.a, seg.b), []);
+const POINTS = SEGMENTS.reduce((r,seg) => r.concat(seg.a, seg.b), []);
 const UNIQUE_POINTS = [...new Set(POINTS)];
 
-/////////////////////////////////////////////////////////////////////////
-
-// MOUSE	
-let Mouse = {
-	x: canvas.width/2,
-	y: canvas.height/2
-};
-canvas.onmousemove = function(event){	
-	Mouse.x = event.clientX;
-	Mouse.y = event.clientY;
-	updateCanvas = true;
-};
-
-// main game loop
-
-window.onload = function(){
-	drawLoop();
-};
+export {
+    canvas,
+    ctx,
+    Mouse,
+    SEGMENTS,
+    POINTS,
+    UNIQUE_POINTS
+}

@@ -1,6 +1,7 @@
+import { SEGMENTS, UNIQUE_POINTS } from './constants'
 
 // Find intersection of RAY & SEGMENT
-function getIntersection(ray,segment){
+const getIntersection = (ray,segment) => {
 
 	// RAY in parametric: Point + Delta*T1
 	let r_px = ray.a.x;
@@ -43,7 +44,7 @@ function getIntersection(ray,segment){
 
 }
 
-function getSightPolygon(sightX,sightY){
+const getSightPolygon = (sightX,sightY) => {
 
 	// Get all angles
 	const uniqueAngles = [];
@@ -69,7 +70,7 @@ function getSightPolygon(sightX,sightY){
 
 		// Find CLOSEST intersection
 		let closestIntersect = null;
-		segments.forEach(segment => {
+		SEGMENTS.forEach(segment => {
 			let intersect = getIntersection(ray,segment);
 			if(!intersect) return;
 			if(!closestIntersect || intersect.param<closestIntersect.param){
@@ -94,3 +95,5 @@ function getSightPolygon(sightX,sightY){
 	// Polygon is intersects, in order of angle
 	return intersects;
 }
+
+export default getSightPolygon;

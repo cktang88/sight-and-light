@@ -1,16 +1,14 @@
-///////////////////////////////////////////////////////
+import { ctx, Mouse, SEGMENTS } from './constants';
+import getSightPolygon from './geometry';
 
-// DRAWING
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-function draw(){
+function canvasDraw(){
 
 	// Clear canvas
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 
 	// Draw segments
 	ctx.strokeStyle = "#999";
-	segments.forEach(seg => {
+	SEGMENTS.forEach(seg => {
 		ctx.beginPath();
 		ctx.moveTo(seg.a.x,seg.a.y);
 		ctx.lineTo(seg.b.x,seg.b.y);
@@ -27,10 +25,13 @@ function draw(){
 	};
 
 	// DRAW AS A GIANT POLYGON
-	for(let i=1;i<polygons.length;i++){
-		drawPolygon(polygons[i],ctx,"rgba(255,255,255,0.2)");
+	const FUZZY = true;
+	if (FUZZY) {
+		for(let i=1;i<polygons.length;i++){
+			drawPolygon(polygons[i],ctx,"rgba(255,255,160,0.2)");
+		}
 	}
-	drawPolygon(polygons[0],ctx,"#fff");
+	drawPolygon(polygons[0],ctx,'#ddb');
 
 	// Draw red dots
 	ctx.fillStyle = "#dd3838";
@@ -57,14 +58,4 @@ function drawPolygon(polygon,ctx,fillStyle){
 	}
 	ctx.fill();
 }
-
-// DRAW LOOP
-window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
-let updateCanvas = true;
-function drawLoop(){
-    requestAnimationFrame(drawLoop);
-    if(updateCanvas){
-    	draw();
-    	updateCanvas = false;
-    }
-}
+export default canvasDraw;
