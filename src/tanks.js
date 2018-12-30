@@ -35,6 +35,58 @@ class InputComponent {
     }
 }
 
+class PhysicsComponent {
+    constructor() {
+        
+    }
+    update(player, collisions) {
+        this.updatePlayer(player);
+        this.handleCollisions(player, collisions);
+    }
+    updatePlayer(player) {
+        const x = Math.cos(player.angle);
+        const y = Math.sin(player.angle);
+
+        if (player.velocity > 0) {
+            player.velocity -= 0.05;
+
+            if (player.velocity > 3) {
+                player.velocity = 3;
+            }
+        } else if (player.velocity < 0) {
+            player.velocity += 0.05;
+
+            if (player.velocity < -2) {
+                player.velocity = -2;
+            }
+        }
+
+        if (!Math.round(player.velocity * 100)) {
+            player.velocity = 0;
+        }
+
+        if (player.velocity) {
+            player.x += x * player.velocity;
+            player.y += y * player.velocity;
+        }
+    }
+    handleCollisions(player, collisions) {
+        collisions.update();
+
+        const potentials = player.potentials();
+
+        // Negate any collisions
+        for (const body of potentials) {
+            if (player.collides(body, result)) {
+                player.x -= result.overlap * result.overlap_x;
+                player.y -= result.overlap * result.overlap_y;
+
+                player.velocity *= 0.9
+            }
+        }
+    }
+}
+
 class Game {
     constructor() {
         const collisions = new Collisions();
@@ -50,6 +102,7 @@ class Game {
         this.player = null;
 
         this.input = new InputComponent();
+        this.physics = new PhysicsComponent();
 
         this.element.innerHTML = `
         <div><b>W, S</b> - Accelerate/Decelerate</div>
@@ -76,55 +129,9 @@ class Game {
 
     update() {
         this.input.update(this.player);
-        this.processGameLogic();
-        this.handleCollisions();
+        this.physics.update(this.player, this.collisions);
         this.render();
     }
-
-    processGameLogic() {
-        const x = Math.cos(this.player.angle);
-        const y = Math.sin(this.player.angle);
-
-        if (this.player.velocity > 0) {
-            this.player.velocity -= 0.05;
-
-            if (this.player.velocity > 3) {
-                this.player.velocity = 3;
-            }
-        } else if (this.player.velocity < 0) {
-            this.player.velocity += 0.05;
-
-            if (this.player.velocity < -2) {
-                this.player.velocity = -2;
-            }
-        }
-
-        if (!Math.round(this.player.velocity * 100)) {
-            this.player.velocity = 0;
-        }
-
-        if (this.player.velocity) {
-            this.player.x += x * this.player.velocity;
-            this.player.y += y * this.player.velocity;
-        }
-    }
-
-    handleCollisions() {
-        this.collisions.update();
-
-        const potentials = this.player.potentials();
-
-        // Negate any collisions
-        for (const body of potentials) {
-            if (this.player.collides(body, result)) {
-                this.player.x -= result.overlap * result.overlap_x;
-                this.player.y -= result.overlap * result.overlap_y;
-
-                this.player.velocity *= 0.9
-            }
-        }
-    }
-
     render() {
         this.context.fillStyle = '#000000';
         this.context.fillRect(0, 0, WIDTH, HEIGHT);

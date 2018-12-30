@@ -27,6 +27,7 @@ Collisions
 Dev
 ---
 * Built using [parcel](https://parceljs.org/)
+* Game code structure based on [Entity-Component-System](https://en.wikipedia.org/wiki/Entity%E2%80%93component%E2%80%93system) architecture.
 
 ```bash
 
