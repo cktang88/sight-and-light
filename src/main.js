@@ -1,8 +1,6 @@
-import canvasDraw from "./render";
+import canvasDraw from "./sight/render";
 
-import Game from './tanks'
-
-
+import Game from './game'
 
 window.requestAnimationFrame = window.requestAnimationFrame ||
 	window.webkitRequestAnimationFrame ||
