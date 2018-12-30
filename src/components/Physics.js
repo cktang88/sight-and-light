@@ -1,53 +1,58 @@
 import Collisions from 'collisions';
 
 class PhysicsComponent {
-    constructor() {
+    constructor(body) {
         // recycle to avoid wasting memory
         this.result = Collisions.createResult();
+        this.body = body;
     }
-    update(player, collisions) {
-        this.updatePlayer(player);
-        this.handleCollisions(player, collisions);
+    update(collisions) {
+        this.updateMovement(this.body);
+        this.handleCollisions(collisions);
     }
-    updatePlayer(player) {
-        const x = Math.cos(player.angle);
-        const y = Math.sin(player.angle);
 
-        if (player.velocity > 0) {
-            player.velocity -= 0.05;
+    // updates movement
+    updateMovement() {
+        if (this.body.velocity > 0) {
+            this.body.velocity -= 0.05;
 
-            if (player.velocity > 3) {
-                player.velocity = 3;
+            if (this.body.velocity > 3) {
+                this.body.velocity = 3;
             }
-        } else if (player.velocity < 0) {
-            player.velocity += 0.05;
+        } else if (this.body.velocity < 0) {
+            this.body.velocity += 0.05;
 
-            if (player.velocity < -2) {
-                player.velocity = -2;
+            if (this.body.velocity < -2) {
+                this.body.velocity = -2;
             }
         }
 
-        if (!Math.round(player.velocity * 100)) {
-            player.velocity = 0;
+        if (!Math.round(this.body.velocity * 100)) {
+            this.body.velocity = 0;
         }
 
-        if (player.velocity) {
-            player.x += x * player.velocity;
-            player.y += y * player.velocity;
+        const x = Math.cos(this.body.angle);
+        const y = Math.sin(this.body.angle);
+
+        if (this.body.velocity) {
+            this.body.x += x * this.body.velocity;
+            this.body.y += y * this.body.velocity;
         }
     }
-    handleCollisions(player, collisions) {
+
+    // handle collision of this body with other bodies
+    handleCollisions(collisions) {
         collisions.update();
 
-        const potentials = player.potentials();
+        const potentials = this.body.potentials();
         const result = this.result;
         // Negate any collisions
         for (const body of potentials) {
-            if (player.collides(body, result)) {
-                player.x -= result.overlap * result.overlap_x;
-                player.y -= result.overlap * result.overlap_y;
-
-                player.velocity *= 0.9
+            if (this.body.collides(body, result)) {
+                // collision occured
+                this.body.x -= result.overlap * result.overlap_x;
+                this.body.y -= result.overlap * result.overlap_y;
+                this.body.velocity *= 0.9
             }
         }
     }

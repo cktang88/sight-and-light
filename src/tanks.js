@@ -32,15 +32,16 @@ class Game {
 
 
         this.input = new InputComponent(this.player);
-        this.physics = new PhysicsComponent();
+        this.physics = new PhysicsComponent(this.player);
         this.graphics = new GraphicsComponent(this.context);
 
         document.addEventListener('keydown', this.input.setKeyEventHandler);
         document.addEventListener('keyup', this.input.setKeyEventHandler);
 
-
+        const bvhCheckbox = document.getElementById('bvh');
         const frame = () => {
-            this.graphics.update(this.collisions);
+            const drawBoundingBox = bvhCheckbox.checked;
+            this.graphics.update(this.collisions, drawBoundingBox);
             requestAnimationFrame(frame);
         };
         // starts drawing as soon as initialized
@@ -51,8 +52,8 @@ class Game {
     }
 
     update() {
-        this.input.update(this.player);
-        this.physics.update(this.player, this.collisions);
+        this.input.update();
+        this.physics.update(this.collisions);
     }
 
     createPlayer(x, y) {

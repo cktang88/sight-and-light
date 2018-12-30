@@ -3,12 +3,12 @@ import {
     WIDTH,
     HEIGHT
 } from '../constants'
+
 class GraphicsComponent {
     constructor(context) {
         this.context = context;
-        this.bvh_checkbox = document.getElementById('bvh');
     }
-    update(collisions) {
+    update(collisions, DRAW_BOUNDING_BOX) {
         this.context.fillStyle = '#000000';
         this.context.fillRect(0, 0, WIDTH, HEIGHT);
 
@@ -28,7 +28,7 @@ class GraphicsComponent {
         collisions.draw(this.context);
         this.context.stroke();
 
-        if (this.bvh_checkbox.checked) {
+        if (DRAW_BOUNDING_BOX) {
             this.context.strokeStyle = '#00FF00';
             this.context.beginPath();
             collisions.drawBVH(this.context);
