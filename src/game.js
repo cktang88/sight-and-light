@@ -11,6 +11,25 @@ import {
 const width = WIDTH;
 const height = HEIGHT;
 
+class Player {
+    constructor(initX, initY, collisions) {
+        this.poly = collisions.createPolygon(initX, initY, [
+            [-20, -10],
+            [20, -10],
+            [20, 10],
+            [-20, 10],
+        ], 0.2);
+        this.velocity = 0;
+
+        this.input = new InputComponent(this.poly);
+        this.physics = new PhysicsComponent(this.poly);
+    }
+    update(collisions) {
+        this.input.update();
+        this.physics.update(collisions);
+    }
+}
+
 class Game {
     constructor(rootDOMElem) {
         /************************************************** */
@@ -26,17 +45,13 @@ class Game {
         this.collisions = collisions;
         this.bodies = [];
 
-        this.player = null;
-        this.createPlayer(400, 300);
+        this.player = new Player(400, 300, this.collisions);
         this.createMap();
 
-
-        this.input = new InputComponent(this.player);
-        this.physics = new PhysicsComponent(this.player);
         this.graphics = new GraphicsComponent(this.context);
 
-        document.addEventListener('keydown', this.input.setKeyEventHandler);
-        document.addEventListener('keyup', this.input.setKeyEventHandler);
+        document.addEventListener('keydown', this.player.input.setKeyEventHandler);
+        document.addEventListener('keyup', this.player.input.setKeyEventHandler);
 
         const bvhCheckbox = document.getElementById('bvh');
         const frame = () => {
@@ -52,21 +67,8 @@ class Game {
     }
 
     update() {
-        this.input.update();
-        this.physics.update(this.collisions);
+        this.player.update(this.collisions);
     }
-
-    createPlayer(x, y) {
-        this.player = this.collisions.createPolygon(x, y, [
-            [-20, -10],
-            [20, -10],
-            [20, 10],
-            [-20, 10],
-        ], 0.2);
-
-        this.player.velocity = 0;
-    }
-
     createMap() {
         const createPolygon = this.collisions.createPolygon.bind(this.collisions);
         // World bounds
