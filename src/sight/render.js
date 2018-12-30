@@ -1,4 +1,4 @@
-import { ctx, Mouse, SEGMENTS, FANCY_GRAPHICS } from './constants';
+import { ctx, Mouse, SEGMENTS, FANCY_GRAPHICS } from '../constants';
 import getSightPolygon from './geometry';
 
 function canvasDraw(){
