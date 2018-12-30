@@ -1,4 +1,4 @@
-import { SEGMENTS, UNIQUE_POINTS } from './constants'
+import { SEGMENTS, UNIQUE_POINTS } from '../constants'
 
 // Find intersection of RAY & SEGMENT
 const getIntersection = (ray,segment) => {
