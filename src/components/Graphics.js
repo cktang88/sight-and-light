@@ -1,7 +1,5 @@
 import {
-    FANCY_GRAPHICS,
-    WIDTH,
-    HEIGHT
+    FANCY_GRAPHICS
 } from '../constants'
 
 import context from '../game'
@@ -15,8 +13,8 @@ class GraphicsComponent {
 
         if (FANCY_GRAPHICS) {
             // cyan highlight
-            context.strokeStyle = '#00FFFF';
-            context.lineWidth = 2;
+            context.strokeStyle = '#4040ff';
+            context.lineWidth = 4;
             context.beginPath();
             // collisions.draw(context);
             this.body.draw(context);

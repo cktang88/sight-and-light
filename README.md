@@ -1,6 +1,13 @@
 Sight & Light
 ===============
 
+TODO
+---
+- [ ] unify polygon methods between sight proj and collision proj
+- [ ] get a Vector + math/geometry lib
+
+
+
 Play
 ---
 
