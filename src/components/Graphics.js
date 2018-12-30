@@ -4,17 +4,9 @@ import {
     HEIGHT
 } from '../constants'
 class GraphicsComponent {
-    constructor() {
-        this.element = document.createElement('div');
-        this.canvas = document.createElement('canvas');
-
-        this.canvas.width = WIDTH;
-        this.canvas.height = HEIGHT;
-        this.context = this.canvas.getContext('2d');
-
+    constructor(context) {
+        this.context = context;
         this.bvh_checkbox = document.getElementById('bvh');
-        this.element.appendChild(this.canvas);
-
     }
     update(collisions) {
         this.context.fillStyle = '#000000';

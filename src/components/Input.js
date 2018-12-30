@@ -1,10 +1,14 @@
-
+/**
+ * for controlling game entities with keyboard
+ */
 class InputComponent {
-    constructor() {
+    constructor(body) {
         this.up = false;
         this.down = false;
         this.left = false;
         this.right = false;
+
+        this.body = body;
 
         this.setKeyEventHandler = (e) => {
             const keydown = e.type === 'keydown';
@@ -16,11 +20,11 @@ class InputComponent {
             key === 'd' && (this.right = keydown);
         };
     }
-    update(player) {
-        this.up && (player.velocity += 0.1);
-        this.down && (player.velocity -= 0.1);
-        this.left && (player.angle -= 0.04);
-        this.right && (player.angle += 0.04);
+    update() {
+        this.up && (this.body.velocity += 0.1);
+        this.down && (this.body.velocity -= 0.1);
+        this.left && (this.body.angle -= 0.04);
+        this.right && (this.body.angle += 0.04);
     }
 }
 

@@ -1,4 +1,3 @@
-
 import InputComponent from './components/Input';
 import PhysicsComponent from './components/Physics';
 import GraphicsComponent from './components/Graphics';
@@ -14,24 +13,31 @@ const height = HEIGHT;
 
 class Game {
     constructor(rootDOMElem) {
+        /************************************************** */
+        this.canvas = document.createElement('canvas');
+        this.canvas.width = WIDTH;
+        this.canvas.height = HEIGHT;
+        this.context = this.canvas.getContext('2d');
+        rootDOMElem.appendChild(this.canvas);
+        /*************************************************** */
+
         const collisions = new Collisions();
 
         this.collisions = collisions;
         this.bodies = [];
 
         this.player = null;
+        this.createPlayer(400, 300);
+        this.createMap();
 
-        this.input = new InputComponent();
+
+        this.input = new InputComponent(this.player);
         this.physics = new PhysicsComponent();
-        this.graphics = new GraphicsComponent();
-
-        rootDOMElem.appendChild(this.graphics.element);
+        this.graphics = new GraphicsComponent(this.context);
 
         document.addEventListener('keydown', this.input.setKeyEventHandler);
         document.addEventListener('keyup', this.input.setKeyEventHandler);
 
-        this.createPlayer(400, 300);
-        this.createMap();
 
         const frame = () => {
             this.graphics.update(this.collisions);
