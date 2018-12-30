@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/cktang88/sight-and-light#readme",
   "dependencies": {
-    "collisions": "^2.0.13"
+    "collisions": "^2.0.13",
+    "craftyjs": "^0.9.0"
   },
   "devDependencies": {
     "webpack": "^4.28.3",
