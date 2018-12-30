@@ -1,10 +1,39 @@
 import Collisions from 'collisions';
 
-import { WIDTH, HEIGHT, FANCY_GRAPHICS } from './constants'
+import {
+    WIDTH,
+    HEIGHT,
+    FANCY_GRAPHICS
+} from './constants'
 
 const width = WIDTH;
 const height = HEIGHT;
 const result = Collisions.createResult();
+
+class InputComponent {
+    constructor() {
+        this.up = false;
+        this.down = false;
+        this.left = false;
+        this.right = false;
+
+        this.setKeyEventHandler = (e) => {
+            const keydown = e.type === 'keydown';
+            const key = e.key.toLowerCase();
+
+            key === 'w' && (this.up = keydown);
+            key === 's' && (this.down = keydown);
+            key === 'a' && (this.left = keydown);
+            key === 'd' && (this.right = keydown);
+        };
+    }
+    update(player) {
+        this.up && (player.velocity += 0.1);
+        this.down && (player.velocity -= 0.1);
+        this.left && (player.angle -= 0.04);
+        this.right && (player.angle += 0.04);
+    }
+}
 
 class Game {
     constructor() {
@@ -20,10 +49,7 @@ class Game {
         this.canvas.height = height;
         this.player = null;
 
-        this.up = false;
-        this.down = false;
-        this.left = false;
-        this.right = false;
+        this.input = new InputComponent();
 
         this.element.innerHTML = `
         <div><b>W, S</b> - Accelerate/Decelerate</div>
@@ -31,18 +57,8 @@ class Game {
         <div><label><input id="bvh" type="checkbox"> Show Bounding Volume Hierarchy</label></div>
     `;
 
-        const updateKeys = (e) => {
-            const keydown = e.type === 'keydown';
-            const key = e.key.toLowerCase();
-
-            key === 'w' && (this.up = keydown);
-            key === 's' && (this.down = keydown);
-            key === 'a' && (this.left = keydown);
-            key === 'd' && (this.right = keydown);
-        };
-
-        document.addEventListener('keydown', updateKeys);
-        document.addEventListener('keyup', updateKeys);
+        document.addEventListener('keydown', this.input.setKeyEventHandler);
+        document.addEventListener('keyup', this.input.setKeyEventHandler);
 
         this.bvh_checkbox = this.element.querySelector('#bvh');
         this.element.appendChild(this.canvas);
@@ -59,17 +75,10 @@ class Game {
     }
 
     update() {
-        this.handleInput();
+        this.input.update(this.player);
         this.processGameLogic();
         this.handleCollisions();
         this.render();
-    }
-
-    handleInput() {
-        this.up && (this.player.velocity += 0.1);
-        this.down && (this.player.velocity -= 0.1);
-        this.left && (this.player.angle -= 0.04);
-        this.right && (this.player.angle += 0.04);
     }
 
     processGameLogic() {
@@ -146,8 +155,6 @@ class Game {
     }
 
     createPlayer(x, y) {
-        const size = 15;
-
         this.player = this.collisions.createPolygon(x, y, [
             [-20, -10],
             [20, -10],
