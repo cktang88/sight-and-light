@@ -37,7 +37,7 @@ class InputComponent {
 
 class PhysicsComponent {
     constructor() {
-        
+
     }
     update(player, collisions) {
         this.updatePlayer(player);
@@ -87,62 +87,29 @@ class PhysicsComponent {
     }
 }
 
-class Game {
+class GraphicsComponent {
     constructor() {
-        const collisions = new Collisions();
-
         this.element = document.createElement('div');
         this.canvas = document.createElement('canvas');
-        this.context = this.canvas.getContext('2d');
-        this.collisions = collisions;
-        this.bodies = [];
-
+        
         this.canvas.width = width;
         this.canvas.height = height;
-        this.player = null;
+        this.context = this.canvas.getContext('2d');
 
-        this.input = new InputComponent();
-        this.physics = new PhysicsComponent();
-
-        this.element.innerHTML = `
-        <div><b>W, S</b> - Accelerate/Decelerate</div>
-        <div><b>A, D</b> - Turn</div>
-        <div><label><input id="bvh" type="checkbox"> Show Bounding Volume Hierarchy</label></div>
-    `;
-
-        document.addEventListener('keydown', this.input.setKeyEventHandler);
-        document.addEventListener('keyup', this.input.setKeyEventHandler);
-
-        this.bvh_checkbox = this.element.querySelector('#bvh');
+        this.bvh_checkbox = document.getElementById('bvh');
         this.element.appendChild(this.canvas);
 
-        this.createPlayer(400, 300);
-        this.createMap();
-
-        const frame = () => {
-            this.update();
-            requestAnimationFrame(frame);
-        };
-
-        frame();
     }
-
-    update() {
-        this.input.update(this.player);
-        this.physics.update(this.player, this.collisions);
-        this.render();
-    }
-    render() {
+    update(collisions) {
         this.context.fillStyle = '#000000';
         this.context.fillRect(0, 0, WIDTH, HEIGHT);
-
 
         if (FANCY_GRAPHICS) {
             // cyan highlight
             this.context.strokeStyle = '#00FFFF';
             this.context.lineWidth = 2;
             this.context.beginPath();
-            this.collisions.draw(this.context);
+            collisions.draw(this.context);
             this.context.stroke();
         }
 
@@ -150,15 +117,53 @@ class Game {
         this.context.strokeStyle = '#FFFFFF';
         this.context.lineWidth = 1;
         this.context.beginPath();
-        this.collisions.draw(this.context);
+        collisions.draw(this.context);
         this.context.stroke();
 
         if (this.bvh_checkbox.checked) {
             this.context.strokeStyle = '#00FF00';
             this.context.beginPath();
-            this.collisions.drawBVH(this.context);
+            collisions.drawBVH(this.context);
             this.context.stroke();
         }
+    }
+}
+
+class Game {
+    constructor(rootDOMElem) {
+        const collisions = new Collisions();
+
+        this.collisions = collisions;
+        this.bodies = [];
+
+        this.player = null;
+
+        this.input = new InputComponent();
+        this.physics = new PhysicsComponent();
+        this.graphics = new GraphicsComponent();
+
+        rootDOMElem.appendChild(this.graphics.element);
+
+        document.addEventListener('keydown', this.input.setKeyEventHandler);
+        document.addEventListener('keyup', this.input.setKeyEventHandler);
+
+        this.createPlayer(400, 300);
+        this.createMap();
+
+        const frame = () => {
+            this.graphics.update(this.collisions);
+            requestAnimationFrame(frame);
+        };
+        // starts drawing as soon as initialized
+        frame();
+
+        this.TARGET_FPS = 60;
+        setInterval(this.update.bind(this), 1000 / this.TARGET_FPS);
+    }
+
+    update() {
+        this.input.update(this.player);
+        this.physics.update(this.player, this.collisions);
     }
 
     createPlayer(x, y) {

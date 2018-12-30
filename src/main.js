@@ -22,6 +22,6 @@ function drawLoop() {
 window.onload = function () {
 	drawLoop();
 	// TODO: game update logic loop
-	const elem = new Game();
-	document.getElementById('root').appendChild(elem.element);
+	const root = document.getElementById('root');
+	new Game(root);
 };
