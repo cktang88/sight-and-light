@@ -1,11 +1,13 @@
 const WIDTH = 960;
-const HEIGHT = 540;
+const HEIGHT = 600;
 const canvas = document.getElementById("canvas");
 
 const ctx = canvas.getContext("2d");
 
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
+
+const FANCY_GRAPHICS = true; // false
 
 // MOUSE	
 const Mouse = {
@@ -74,6 +76,7 @@ const POINTS = SEGMENTS.reduce((r,seg) => r.concat(seg.a, seg.b), []);
 const UNIQUE_POINTS = [...new Set(POINTS)];
 
 export {
+    FANCY_GRAPHICS,
     WIDTH,
     HEIGHT,
     canvas,

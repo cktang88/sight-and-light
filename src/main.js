@@ -1,6 +1,6 @@
 import canvasDraw from "./render";
 
-import Tanks from './tanks'
+import Game from './tanks'
 
 
 
@@ -22,6 +22,6 @@ function drawLoop() {
 window.onload = function () {
 	drawLoop();
 	// TODO: game update logic loop
-	const elem = new Tanks();
+	const elem = new Game();
 	document.getElementById('root').appendChild(elem.element);
 };

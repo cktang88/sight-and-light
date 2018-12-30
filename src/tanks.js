@@ -1,12 +1,12 @@
 import Collisions from 'collisions';
 
-import { WIDTH, HEIGHT } from './constants'
+import { WIDTH, HEIGHT, FANCY_GRAPHICS } from './constants'
 
-const width = 800;
-const height = 600;
+const width = WIDTH;
+const height = HEIGHT;
 const result = Collisions.createResult();
 
-export default class Tank {
+class Game {
     constructor() {
         const collisions = new Collisions();
 
@@ -118,9 +118,21 @@ export default class Tank {
 
     render() {
         this.context.fillStyle = '#000000';
-        this.context.fillRect(0, 0, 800, 600);
+        this.context.fillRect(0, 0, WIDTH, HEIGHT);
 
+
+        if (FANCY_GRAPHICS) {
+            // cyan highlight
+            this.context.strokeStyle = '#00FFFF';
+            this.context.lineWidth = 2;
+            this.context.beginPath();
+            this.collisions.draw(this.context);
+            this.context.stroke();
+        }
+
+        // white main line color
         this.context.strokeStyle = '#FFFFFF';
+        this.context.lineWidth = 1;
         this.context.beginPath();
         this.collisions.draw(this.context);
         this.context.stroke();
@@ -261,3 +273,5 @@ export default class Tank {
 function random(min, max) {
     return Math.floor(Math.random() * max) + min;
 }
+
+export default Game;

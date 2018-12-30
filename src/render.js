@@ -1,4 +1,4 @@
-import { ctx, Mouse, SEGMENTS } from './constants';
+import { ctx, Mouse, SEGMENTS, FANCY_GRAPHICS } from './constants';
 import getSightPolygon from './geometry';
 
 function canvasDraw(){
@@ -26,7 +26,7 @@ function canvasDraw(){
 
 	// DRAW AS A GIANT POLYGON
 	const FUZZY = true;
-	if (FUZZY) {
+	if (FANCY_GRAPHICS) {
 		for(let i=1;i<polygons.length;i++){
 			drawPolygon(polygons[i],ctx,"rgba(255,255,160,0.2)");
 		}

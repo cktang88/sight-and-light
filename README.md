@@ -1,6 +1,15 @@
 Sight & Light
 ===============
 
+Play
+---
+
+TIP: turn `FANCY_GRAPHICS` option on!
+
+```bash
+npm start
+```
+
 
 Libs
 ---
