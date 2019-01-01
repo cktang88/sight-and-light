@@ -1,8 +1,6 @@
-body {
-    margin: 100px;
-    background: #eee;
-}
 
-#canvas {
-    background: rgb(99, 99, 99);
+
+#game {
+    background: #eee;
+    border: 1px black solid;
 }
